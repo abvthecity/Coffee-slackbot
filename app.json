@@ -1,0 +1,9 @@
+{
+	"name": "coffee",
+	"description": "",
+	"keywords": ["slack","coffeebot"],
+	"repository":"https://github.com/ninjiangstar/coffee",
+	"env": {
+		"SLACK_TOKEN": "xoxb-32276219237-8xRM2daYH9eFTyJ0hH53bJlJ"
+	}
+}

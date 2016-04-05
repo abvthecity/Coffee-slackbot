@@ -1,17 +1,15 @@
-if(!process.env.token) {
-	console.log('Error: Specify token in environment');
-	process.exit(1);
-}
-
 var Bot = require('botkit');
+var redis = require('botkit/lib/storage/redis_storage');
+var http = require('http');
+var url = require('url');
 
-var controller = Botkit.slackbot();
+var controller = Botkit.slackbot({
+	storage: redisStorage
+});
 
 var bot = controller.spawn({
-	token: process.env.token // need to implement later
-}).startRTM(function(err,bot,payload){
-	if(err) throw new Error('Could not connect to Slack');
-});
+	token: process.env.SLACK_TOKEN
+}).startRTM();
 
 // SAVE command
 controller.hears(['save (.*)', 'save (.*) to (.*)'], 'direct_message,direct_mention,mention', function(bot, message){
@@ -36,3 +34,8 @@ controller.hears(['collections', 'show collections'], 'direct_message,direct_men
 controller.hears(['get (.*)','show (.*)', 'list (.*)', 'reading list (.*)'], 'direct_message,direct_mention,mention', function(bot, message){
 	bot.reply(message, "Sorry, nothing to get.");
 });
+
+http.createServer(function(req, res){
+	res.writeHead(200, {'Content-Type': 'text/plain'});
+	res.end('Dyno is awake.');
+}).listesn(process.env.PORT || 5000);
