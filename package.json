@@ -1,11 +1,24 @@
 {
   "name": "coffee",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "main": "bot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "MIT",
+  "dependencies": {
+    "botkit": "0.0.15",
+    "slackbots": "^0.5.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ninjiangstar/Coffee.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ninjiangstar/Coffee/issues"
+  },
+  "homepage": "https://github.com/ninjiangstar/Coffee#readme",
+  "description": ""
 }
