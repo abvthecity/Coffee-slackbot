@@ -7,7 +7,7 @@ require('dotenv').config();
 
 var Botkit = require('botkit');
 var Firebase = require("firebase");
-var db = new Firebase("https://readcoffee.firebaseio.com/");
+var db = new Firebase("https://readcoffee.firebaseio.com/slackbot");
 
 var controller = Botkit.slackbot({
 	debug:true
@@ -18,23 +18,19 @@ var bot = controller.spawn({
 }).startRTM();
 
 // IMPORT COMMANDS
-var bot_hello = require('./commands/hello');
-var bot_save = require('./commands/save');
-var bot_users = require('./commands/users');
-var bot_collections = require('./commands/collections');
-var bot_readinglist = require('./commands/readinglist');
+var command = require("./commands/commands");
 
 // HELLO command
-controller.hears(['hello','hi','hey','help'],'direct_message,direct_mention,mention', bot_hello.command);
+controller.hears(['hello','hi','hey','help'],'direct_message,direct_mention,mention', command.hello);
 
 // SAVE command
-controller.hears(['save (.*)', 'save (.*) to (.*)'], 'direct_message,direct_mention,mention', bot_save.command);
+controller.hears(['save (.*)'], 'direct_message,direct_mention,mention', command.save);
 
 // USERS command
-controller.hears(['users','show users'], 'direct_message,direct_mention,mention', bot_users.command);
+controller.hears(['users','show users'], 'direct_message,direct_mention,mention', command.save);
 
 // COLLECTIONS command
-controller.hears(['collections', 'show collections', 'show my collections'], 'direct_message,direct_mention,mention', bot_collections.command);
+controller.hears(['collections', 'show collections', 'show my collections'], 'direct_message,direct_mention,mention', command.collections);
 
 // READINGLIST command
-controller.hears(['get (.*)','show (.*)', 'list (.*)', 'reading list (.*)'], 'direct_message,direct_mention,mention', bot_readinglist.command);
+controller.hears(['get (.*)','show (.*)', 'list (.*)', 'reading list (.*)'], 'direct_message,direct_mention,mention', command.readinglist);

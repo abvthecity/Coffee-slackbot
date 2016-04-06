@@ -5,4 +5,4 @@ var command = function(bot, message){
 	bot.reply(message, "Sorry, nothing to get.");
 }
 
-module.exports.command = command;
+module.exports = command;
