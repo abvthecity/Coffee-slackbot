@@ -21,16 +21,16 @@ var bot = controller.spawn({
 var command = require("./commands/commands");
 
 // SAVE command
-controller.hears(['save (.*)', 'add (.*)'], 'direct_message,direct_mention,mention', command.save);
+controller.hears(['save http(.*)', 'add http(.*)', 'collect http(.*)', 'http(.*)'], 'direct_message,direct_mention,mention', command.save);
+
+// READINGLIST command
+controller.hears(['get (.*)','show (.*)', 'list (.*)', 'reading list (.*)'], 'direct_message,direct_mention,mention', command.readinglist);
 
 // USERS command
 controller.hears(['users','show users'], 'direct_message,direct_mention,mention', command.users);
 
 // COLLECTIONS command
 controller.hears(['collections', 'show collections', 'show my collections'], 'direct_message,direct_mention,mention', command.collections);
-
-// READINGLIST command
-controller.hears(['get (.*)','show (.*)', 'list (.*)', 'reading list (.*)'], 'direct_message,direct_mention,mention', command.readinglist);
 
 // HELLO command
 controller.hears(['hello','hi','hey','help'],'direct_message,direct_mention,mention', command.hello);
