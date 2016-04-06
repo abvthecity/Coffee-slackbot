@@ -17,7 +17,7 @@ var bot = controller.spawn({
 }).startRTM();
 
 controller.hears(['hello','hi','hey','help'],'direct_message,direct_mention,mention',function(bot,message){
-	bot.reply(message, "Hey whatsup?");
+	bot.reply(message, "Whatsup?");
 });
 
 // SAVE command
