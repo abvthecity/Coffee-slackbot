@@ -1,12 +1,13 @@
-if (!process.env.TOKEN) {
+require('dotenv').config();
+
+/*if (!process.env.TOKEN) {
     console.log('Error: Specify token in environment');
     process.exit(1);
-}
+}*/
 
 var Botkit = require('botkit');
-//var redis = require('botkit/lib/storage/redis_storage');
-//var http = require('http');
-//var url = require('url');
+var Firebase = require("firebase");
+var db = new Firebase("https://readcoffee.firebaseio.com/");
 
 var controller = Botkit.slackbot({
 	debug:true
@@ -16,30 +17,24 @@ var bot = controller.spawn({
 	token: process.env.TOKEN
 }).startRTM();
 
-controller.hears(['hello','hi','hey','help'],'direct_message,direct_mention,mention',function(bot,message){
-	bot.reply(message, "Whatsup?");
-});
+// IMPORT COMMANDS
+var bot_hello = require('./commands/hello');
+var bot_save = require('./commands/save');
+var bot_users = require('./commands/users');
+var bot_collections = require('./commands/collections');
+var bot_readinglist = require('./commands/readinglist');
+
+// HELLO command
+controller.hears(['hello','hi','hey','help'],'direct_message,direct_mention,mention', bot_hello.command);
 
 // SAVE command
-controller.hears(['save (.*)', 'save (.*) to (.*)'], 'direct_message,direct_mention,mention', function(bot, message){
-	var link = message.match[1];
-	var collection = message.match[2] || "";
-	
-	if(collection == "") bot.reply(message, 'Thanks! Saved <' + link + '>. Would you like to add it to a collection?');
-	else bot.reply(message, 'Thanks! Saved <' + link + '> to *' + collection + '*!');
-});
+controller.hears(['save (.*)', 'save (.*) to (.*)'], 'direct_message,direct_mention,mention', bot_save.command);
 
 // USERS command
-controller.hears(['users','show users'], 'direct_message,direct_mention,mention', function(bot, message){
-	bot.reply(message, "If there were users I would show them to you.");
-});
+controller.hears(['users','show users'], 'direct_message,direct_mention,mention', bot_users.command);
 
 // COLLECTIONS command
-controller.hears(['collections', 'show collections'], 'direct_message,direct_mention,mention', function(bot, message){
-	bot.reply(message, "If there were collections already I would show them to you.");
-});
+controller.hears(['collections', 'show collections', 'show my collections'], 'direct_message,direct_mention,mention', bot_collections.command);
 
-// GET command
-controller.hears(['get (.*)','show (.*)', 'list (.*)', 'reading list (.*)'], 'direct_message,direct_mention,mention', function(bot, message){
-	bot.reply(message, "Sorry, nothing to get.");
-});
+// READINGLIST command
+controller.hears(['get (.*)','show (.*)', 'list (.*)', 'reading list (.*)'], 'direct_message,direct_mention,mention', bot_readinglist.command);
