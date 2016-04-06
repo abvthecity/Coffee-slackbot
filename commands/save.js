@@ -11,7 +11,7 @@ var command = function(bot, message){
 	var splitted = message.match[1].split("to ");
 	var link = "http" + splitted[0].replace('<','').replace('>','');
 	var collection = splitted[1] || "";
-	//collection = collection.toLowerCase().replace('#','').replace(' ','-')
+	collection = collection.toLowerCase().replace('#','').replace(' ','-');
 	console.log(link);
 
 	var addLinkToUser = function(collection){
