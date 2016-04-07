@@ -1,10 +1,10 @@
-require('dotenv').config();
+//require('dotenv').config();
 
 var https = require("https");
 
-module.exports = function(APIRequest, param, callback){
+module.exports = function(bot, APIRequest, param, callback){
 	//param = param || {};
-	var url = "https://slack.com/api/" + APIRequest + "?token=" + process.env.TOKEN;
+	var url = "https://slack.com/api/" + APIRequest + "?token=" + bot.config.token;
 	for(var key in param){
 		url += "&" + key + "=" + param[key];
 	}

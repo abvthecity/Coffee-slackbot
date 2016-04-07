@@ -21,7 +21,7 @@ var addLinkToUser = function(bot, link, title, user, collection){
 		db.child(identity.team_id).child("users").child(user).child("urls").child(db_newURL.key()).set(objSet);
 
 		// re-insert name if doesn't exist
-		slackAPI("users.info", {user:user}, function(data){
+		slackAPI(bot, "users.info", {user:user}, function(data){
 			var userName = data.user.name;
 			db.child(identity.team_id).child("users").child(user).once("value", function(snapshot){
 				if(snapshot.val().name != userName)

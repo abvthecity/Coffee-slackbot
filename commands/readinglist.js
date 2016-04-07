@@ -20,7 +20,7 @@ var command = function(bot, message){
 
 	if(matched == "all"){ // everything
 		bot.identifyBot(function(err,identity) {
-			slackAPI("users.list", {}, function(data){
+			slackAPI(bot, "users.list", {}, function(data){
 				db.child(identity.team_id).child("urls").once("value", function(urldata){
 					var colString = "";
 					var colCount = 0;
@@ -40,7 +40,7 @@ var command = function(bot, message){
 
 	if(hashtag != ""){ // just collections
 		bot.identifyBot(function(err,identity) {
-			slackAPI("users.list", {}, function(data){
+			slackAPI(bot, "users.list", {}, function(data){
 				db.child(identity.team_id).child("collections").child(hashtag).child("urls").once("value", function(urldata){
 					var colString = "";
 					var colCount = 0;
@@ -61,7 +61,7 @@ var command = function(bot, message){
 	if(at != ""){ // just user
 
 		if(!mention){
-			slackAPI("users.list", {}, function(data){
+			slackAPI(bot, "users.list", {}, function(data){
 				for(var key in data.members){
 					if(data.members[key].name == at){
 						at = data.members[key].id;

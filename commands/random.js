@@ -7,7 +7,7 @@ var slackAPI = require("../func/slack-web-api");
 
 var command = function(bot, message){
 	bot.identifyBot(function(err,identity) {
-	slackAPI("users.list", {}, function(data){
+	slackAPI(bot, "users.list", {}, function(data){
 		db.child(identity.team_id).child("urls").once("value", function(urldata){
 			var colString = "";
 			var colCount = 0;

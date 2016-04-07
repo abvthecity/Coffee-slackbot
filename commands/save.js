@@ -22,18 +22,6 @@ var command = function(bot, message){
 		if(collection == ""){ // collections wasn't declared
 
 			var conversation = function(err, convo){
-				var clientTitle = client.title.replace('\n','');
-				if(clientTitle == ""){
-					convo.ask('I attempted to save <' + link + '>, but I couldn\'t find a title. Could you paste the title for me?', [
-						{
-							default: true,
-							callback: function(res, convo){
-								addToCollectionsConversationWrapper(res.text);
-								convo.next();
-							}
-						}
-					]);
-				} else addToCollectionsConversationWrapper(clientTitle);
 
 				var addToCollectionsConversationWrapper = function(clientTitle){
 
@@ -78,6 +66,19 @@ var command = function(bot, message){
 					});
 
 				}
+				
+				var clientTitle = client.title.replace('\n','');
+				if(clientTitle == ""){
+					convo.ask('I attempted to save <' + link + '>, but I couldn\'t find a title. Could you paste the title for me?', [
+						{
+							default: true,
+							callback: function(res, convo){
+								addToCollectionsConversationWrapper(res.text);
+								convo.next();
+							}
+						}
+					]);
+				} else addToCollectionsConversationWrapper(clientTitle);
 
 			}
 

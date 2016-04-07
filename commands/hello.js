@@ -25,9 +25,9 @@ var command = function(bot,message){
 		sayHelp();
 	}
 	else {
-		slackAPI("users.info", {user:message.user}, function(data){
+		slackAPI(bot,"users.info", {user:message.user}, function(data){
 			var userName = data.user.name;
-			bot.reply(message, "Hello @" + userName + "!");
+			bot.reply(message, "Hello <@" + message.user + ">!");
 			bot.identifyBot(function(err,identity) {
 				db.child(identity.team_id).child("users").child(message.user).once("value", function(snapshot){
 					if(!snapshot.exists()){
