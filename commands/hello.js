@@ -34,8 +34,7 @@ var command = function(bot,message){
 				db.child(identity.team_id).child("users").child(message.user).once("value", function(snapshot){
 					if(!snapshot.exists()){
 						db.child(identity.team_id).child("users").child(message.user).child("name").set(userName);
-						bot.reply(message, "Seems like you're new to coffee!");
-						sayHelp();
+						bot.reply(message, "Seems like you're new to coffee! Type *help* to get started.");
 					}
 				});
 			});
