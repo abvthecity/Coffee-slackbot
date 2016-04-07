@@ -86,7 +86,7 @@ var command = function(bot, message){
 		});
 	}
 	
-	if(hashtag == "" && at == "") {
+	if(hashtag == "" && at == "" && matched != "all") {
 		bot.reply(message, "Sorry, nothing to get.");
 	}
 }

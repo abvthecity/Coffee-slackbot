@@ -34,4 +34,14 @@ var addLinkToUser = function(bot, link, title, user, collection){
 	});
 }
 
+var removeLink = function(bot, user, collection, hashID){
+	bot.identifyBot(function(err,identify){
+		var db_team = db.child(identify.team_id);
+		db_team.child("urls").child(hashID).remove();
+		db_team.child("users").child(user).child("urls").child(hashID).remove();
+		db_team.child("collections").child(collection).child("urls").child(hashID).remove();
+	});
+}
+
 module.exports.addLinkToUser = addLinkToUser;
+module.exports.removeLink = removeLink;

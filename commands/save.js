@@ -20,56 +20,81 @@ var command = function(bot, message){
 	client.on("fetch", function(){
 
 		if(collection == ""){ // collections wasn't declared
-			var conversation = function(err, convo){
-				convo.say('Thanks! Saved "*' + client.title + '*" <' + link + '>.\nWould you like to add it to a collection?');
 
-				// display list of collections, then ask for the name of collection to add to
-				var addToCollectionsConversation = function(colCount, colString){
-					convo.say('There are '+ colCount +' existing collections:'+ colString +'\n+ create new collection');
-					convo.ask('Type in the name of existing or new collection, or type "no" to add to _uncategorized_.', [
-						{
-							pattern:'no',
-							callback: function(res, convo){
-								dbFunc.addLinkToUser(bot, link, client.title, message.user, "uncategorized");
-								convo.say('Alright. Added your link to collection:*_#uncategorized_* instead. ¯\\_(ツ)_/¯');
-								convo.next();
-							}
-						},
+			var conversation = function(err, convo){
+				var clientTitle = client.title.replace('\n','');
+				if(clientTitle == ""){
+					convo.ask('I attempted to save <' + link + '>, but I couldn\'t find a title. Could you paste the title for me?', [
 						{
 							default: true,
 							callback: function(res, convo){
-								collection = res.text.toLowerCase().replace('#','').replace(' ','-');
-								dbFunc.addLinkToUser(bot, link, client.title, message.user, collection);
-								convo.say('Thanks! Added your link to collection:*_#' + collection + '_*');
+								addToCollectionsConversationWrapper(res.text);
 								convo.next();
 							}
 						}
-
 					]);
-				}
+				} else addToCollectionsConversationWrapper(clientTitle);
 
-				// pull collections from database
-				bot.identifyBot(function(err,identity) {
-					db.child(identity.team_id).child("collections").once("value", function(snapshot){
-						var colString = "";
-						var colCount = 0;
+				var addToCollectionsConversationWrapper = function(clientTitle){
 
-						snapshot.forEach(function(data){
-							colCount++;
-							colString += "\n--- *#" + data.key() + "* (" + Object.keys(data.val().urls).length + ")";
+					// display list of collections, then ask for the name of collection to add to
+					var addToCollectionsConversation = function(colCount, colString){
+						convo.say('Thanks! Saved "*' + clientTitle + '*" <' + link + '>.\nWould you like to add it to a collection?');
+						convo.ask('There are '+ colCount +' existing collections:'+ colString +'\n+ create new collection\nType in the name of existing or new collection, or type "no" to add to _uncategorized_.', [
+							{
+								pattern:'no',
+								callback: function(res, convo){
+									dbFunc.addLinkToUser(bot, link, clientTitle, message.user, "uncategorized");
+									convo.say('Alright. Added your link to collection:*_#uncategorized_* instead. ¯\\_(ツ)_/¯');
+									convo.next();
+								}
+							},
+							{
+								default: true,
+								callback: function(res, convo){
+									collection = res.text.toLowerCase().replace('#','').replace(' ','-');
+									dbFunc.addLinkToUser(bot, link, clientTitle, message.user, collection);
+									convo.say('Thanks! Added your link to collection:*_#' + collection + '_*');
+									convo.next();
+								}
+							}
+
+						]);
+					}
+
+					// pull collections from database
+					bot.identifyBot(function(err,identity) {
+						db.child(identity.team_id).child("collections").once("value", function(snapshot){
+							var colString = "";
+							var colCount = 0;
+
+							snapshot.forEach(function(data){
+								colCount++;
+								colString += "\n--- *#" + data.key() + "* (" + Object.keys(data.val().urls).length + ")";
+							});
+
+							addToCollectionsConversation(colCount, colString);
 						});
-
-						addToCollectionsConversation(colCount, colString);
 					});
-				});
+
+				}
 
 			}
 
 			bot.startConversation(message,conversation); // initiate conversation
 		}
 		else { // collections was declared
-			dbFunc.addLinkToUser(bot, link, client.title, message.user, collection);
-			bot.reply(message, 'Thanks! Saved "*' + client.title + '*" <' + link + '> to *_#' + collection + '_*');
+			var clientTitle = client.title.replace('\n','');
+			if(clientTitle == ""){
+				bot.startConversation(message,function(err, convo){
+					convo.ask('I attempted to save <' + link + '>, but I couldn\'t find a title. Could you paste the title for me?', function(res, convo){
+						clientTitle = res.text.replace('\n','');
+						convo.next();
+					});
+				});
+			}
+			dbFunc.addLinkToUser(bot, link, clientTitle, message.user, collection);
+			bot.reply(message, 'Thanks! Saved "*' + clientTitle + '*" <' + link + '> to *_#' + collection + '_*');
 		}
 
 	});

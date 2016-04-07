@@ -37,3 +37,6 @@ controller.hears(['hello','hi','hey','help'],'direct_message,direct_mention,ment
 
 // RANDOM command
 controller.hears(['random'],'direct_message,direct_mention,mention', command.random);
+
+// REMOVE command
+controller.hears(['remove (.*)', 'remove'],'direct_message,direct_mention,mention', command.remove);
