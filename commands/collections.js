@@ -13,7 +13,7 @@ var command = function(bot, message){
 
 			snapshot.forEach(function(data){
 				colCount++;
-				colString += "\n* *#" + data.key() + "* (" + Object.keys(data.val().urls).length + ")";
+				colString += "\n--- *#" + data.key() + "* (" + Object.keys(data.val().urls).length + ")";
 			});
 
 			if(colCount > 0){

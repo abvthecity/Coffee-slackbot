@@ -8,8 +8,7 @@ module.exports = function(APIRequest, param, callback){
 	for(var key in param){
 		url += "&" + key + "=" + param[key];
 	}
-
-	console.log("HEYYYYYOOOOOOO:" + url);
+	
 	https.get(url, function(res) {
 		var body = ''
 		res.on('data', function(ch) { body += ch })

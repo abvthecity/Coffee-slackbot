@@ -18,25 +18,47 @@ var command = function(bot, message){
 		at = at.replace(">","");
 	}
 
-	if(hashtag != "" && at == ""){ // just collections
+	if(matched == "all"){ // everything
 		bot.identifyBot(function(err,identity) {
-			db.child(identity.team_id).child("collections").child(hashtag).child("urls").once("value", function(urldata){
-				var colString = "";
-				var colCount = 0;
+			slackAPI("users.list", {}, function(data){
+				db.child(identity.team_id).child("urls").once("value", function(urldata){
+					var colString = "";
+					var colCount = 0;
 
-				urldata.forEach(function(url){
-					colCount++;
-					slackAPI("users.info", {user:url.val().user}, function(data){
-						colString += "\n* *" + url.val().title + "* recommended by @"+data.user.name+" : " + url.val().url;
+					urldata.forEach(function(url){
+						colCount++;
+						var userName = url.val().user;
+						colString += "\n--- *" + url.val().title + "* recommended by <@"+userName+"> in #"+url.val().collection+" : " + url.val().url;
+
 					});
-				});
 
-				bot.reply(message, 'There are '+ colCount +' articles in *#' + hashtag + '*:'+ colString);
+					bot.reply(message, 'There are '+ colCount +' articles total:' + colString);
+				});
+			});
+		});
+	}
+
+	if(hashtag != ""){ // just collections
+		bot.identifyBot(function(err,identity) {
+			slackAPI("users.list", {}, function(data){
+				db.child(identity.team_id).child("collections").child(hashtag).child("urls").once("value", function(urldata){
+					var colString = "";
+					var colCount = 0;
+
+					urldata.forEach(function(url){
+						colCount++;
+						var userName = url.val().user;
+						colString += "\n--- *" + url.val().title + "* recommended by <@"+userName+"> : " + url.val().url;
+
+					});
+
+					bot.reply(message, 'There are '+ colCount +' articles in *#' + hashtag + '*:' + colString);
+				});
 			});
 		});
 	}
 	
-	if(hashtag == "" && at != ""){ // just user
+	if(at != ""){ // just user
 
 		if(!mention){
 			slackAPI("users.list", {}, function(data){
@@ -56,10 +78,10 @@ var command = function(bot, message){
 
 				urldata.forEach(function(url){
 					colCount++;
-					colString += "\n* *" + url.val().title + "* in #" + url.val().collection + " : " + url.val().url;
+					colString += "\n--- *" + url.val().title + "* in #" + url.val().collection + " : " + url.val().url;
 				});
 
-				bot.reply(message, 'There are '+ colCount +' articles recommended by *@' + at + '* :'+ colString);
+				bot.reply(message, 'There are '+ colCount +' articles recommended by *<@' + at + '>* :'+ colString);
 			});
 		});
 	}

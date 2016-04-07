@@ -17,7 +17,6 @@ var command = function(bot, message){
 	console.log(link);
 	
 	ArticleParser.extract(link).then(function(article){
-		console.log("THIS HAS BEEN ACTIVATED")
 
 		if(collection == ""){ // collections wasn't declared
 			var conversation = function(err, convo){
@@ -56,7 +55,7 @@ var command = function(bot, message){
 
 						snapshot.forEach(function(data){
 							colCount++;
-							colString += "\n* *#" + data.key() + "* (" + Object.keys(data.val().urls).length + ")";
+							colString += "\n--- *#" + data.key() + "* (" + Object.keys(data.val().urls).length + ")";
 						});
 
 						addToCollectionsConversation(colCount, colString);

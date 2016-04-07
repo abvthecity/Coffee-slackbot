@@ -34,3 +34,6 @@ controller.hears(['get (.*)','show (.*)', 'list (.*)', 'reading list (.*)'], 'di
 
 // HELLO command
 controller.hears(['hello','hi','hey','help'],'direct_message,direct_mention,mention', command.hello);
+
+// RANDOM command
+controller.hears(['random'],'direct_message,direct_mention,mention', command.random);
