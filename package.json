@@ -8,6 +8,7 @@
   "author": "Andrew Jiang",
   "license": "MIT",
   "dependencies": {
+    "beepboop-botkit": "^1.1.1",
     "botkit": "0.0.15",
     "dotenv": "^2.0.0",
     "firebase": "^2.4.2",
