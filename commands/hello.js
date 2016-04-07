@@ -16,7 +16,9 @@ var command = function(bot,message){
 		helpMessage += "--- `users` will return a list of active users.\n";
 		helpMessage += "--- `collections` will return a list of collections.\n";
 		helpMessage += "--- `get #collection-name` or `get @username` will return list of articles posted in the collection or by the user.\n";
-		helpMessage += "Happy reading! :)";
+		helpMessage += "--- `remove` gives you the tools to remove your articles.\n";
+		helpMessage += "--- `random` will return a random article.\n";
+		helpMessage += "Coffee is still in alpha, but happy reading! :)";
 		bot.reply(message, helpMessage);
 	}
 
