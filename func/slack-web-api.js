@@ -1,0 +1,29 @@
+require('dotenv').config();
+
+var https = require("https");
+
+module.exports = function(APIRequest, param, callback){
+	//param = param || {};
+	var url = "https://slack.com/api/" + APIRequest + "?token=" + process.env.TOKEN;
+	for(var key in param){
+		url += "&" + key + "=" + param[key];
+	}
+
+	console.log("HEYYYYYOOOOOOO:" + url);
+	https.get(url, function(res) {
+		var body = ''
+		res.on('data', function(ch) { body += ch })
+
+		res.on('end', function() {
+			try {
+				var data = JSON.parse(body)
+				console.log(data);
+				callback(data) // IMPORTANT
+			} catch(e) {
+				//console.error("Error: ")
+			}
+		})
+	}).on('error', function(e) {
+		console.error("Error: ", e)
+	})
+}
