@@ -8,11 +8,10 @@
   "author": "Andrew Jiang",
   "license": "MIT",
   "dependencies": {
-    "article-parser": "^0.4.3",
     "botkit": "0.0.15",
     "dotenv": "^2.0.0",
     "firebase": "^2.4.2",
-    "slackbots": "^0.5.1"
+    "node-metainspector": "^1.2.0"
   },
   "repository": {
     "type": "git",

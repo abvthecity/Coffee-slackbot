@@ -1,7 +1,6 @@
 // SAVE command
 
-var ArticleParser = require("article-parser");
-
+var MetaInspector = require('node-metainspector');
 
 var Firebase = require("firebase");
 var db = new Firebase("https://readcoffee.firebaseio.com/slackbot");
@@ -15,12 +14,14 @@ var command = function(bot, message){
 	var collection = splitted[1] || "";
 	collection = collection.toLowerCase().replace('#','').replace(' ','-');
 	console.log(link);
-	
-	ArticleParser.extract(link).then(function(article){
+
+	var client = new MetaInspector(link, { timeout: 5000 });
+
+	client.on("fetch", function(){
 
 		if(collection == ""){ // collections wasn't declared
 			var conversation = function(err, convo){
-				convo.say('Thanks! Saved "*' + article.title + '*" <' + link + '>.\nWould you like to add it to a collection?');
+				convo.say('Thanks! Saved "*' + client.title + '*" <' + link + '>.\nWould you like to add it to a collection?');
 
 				// display list of collections, then ask for the name of collection to add to
 				var addToCollectionsConversation = function(colCount, colString){
@@ -29,7 +30,7 @@ var command = function(bot, message){
 						{
 							pattern:'no',
 							callback: function(res, convo){
-								dbFunc.addLinkToUser(bot, link, article.title, message.user, "uncategorized");
+								dbFunc.addLinkToUser(bot, link, client.title, message.user, "uncategorized");
 								convo.say('Alright. Added your link to collection:*_#uncategorized_* instead. ¯\\_(ツ)_/¯');
 								convo.next();
 							}
@@ -38,7 +39,7 @@ var command = function(bot, message){
 							default: true,
 							callback: function(res, convo){
 								collection = res.text.toLowerCase().replace('#','').replace(' ','-');
-								dbFunc.addLinkToUser(bot, link, article.title, message.user, collection);
+								dbFunc.addLinkToUser(bot, link, client.title, message.user, collection);
 								convo.say('Thanks! Added your link to collection:*_#' + collection + '_*');
 								convo.next();
 							}
@@ -67,13 +68,17 @@ var command = function(bot, message){
 			bot.startConversation(message,conversation); // initiate conversation
 		}
 		else { // collections was declared
-			dbFunc.addLinkToUser(bot, link, article.title, message.user, collection);
-			bot.reply(message, 'Thanks! Saved "*' + article.title + '*" <' + link + '> to *_#' + collection + '_*');
+			dbFunc.addLinkToUser(bot, link, client.title, message.user, collection);
+			bot.reply(message, 'Thanks! Saved "*' + client.title + '*" <' + link + '> to *_#' + collection + '_*');
 		}
 
-	}).catch(function(err){ // couldn't parse article
+	});
+
+	client.on("error", function(err){ // couldn't parse article
 		if(err) bot.reply(message, 'Sorry, something was wrong with your url <' + link + '> and I wasn\'t able to add it to your collections. Try again?');
 	});
+
+	client.fetch();
 }
 
 module.exports = command;
