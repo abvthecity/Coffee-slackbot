@@ -7,7 +7,7 @@ var Firebase = require("firebase");
 var db = new Firebase("https://readcoffee.firebaseio.com/slackbot");
 
 var controller = Botkit.slackbot()
-var beepboop = BeepBoop.start(controller)
+var beepboop = BeepBoop.start(controller, { debug: true })
 
 // listen for botkit controller events
 controller.on('bot_channel_join', function (bot, message) {
